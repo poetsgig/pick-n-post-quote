@@ -1,0 +1,14 @@
+#pick-n-post-quote {
+	margin-top: 10px;
+}
+#pick-n-post-quote-author {
+	margin-top: 5px;
+	text-align: right;
+}
+#pick-n-post-quote-author:before {
+	vertical-align: middle;
+}
+#pick-n-post-quote-source {
+	color: #677870;
+	text-align: right;
+}
