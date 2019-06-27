@@ -8,7 +8,7 @@
     Version: 1.0.1
     License: GNU General Public License v2 or later
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
-	Text Domain: pick_n_posr_quote
+	Text Domain: pick_n_post_quote
     Domain Path: /languages
 */
 
