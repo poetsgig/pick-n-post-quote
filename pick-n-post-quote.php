@@ -213,7 +213,7 @@ class pick_n_post_quote extends WP_Widget {
 			  'display_author' => 1,
 			  'display_source' => 0,
 			  'font_size_quote' => 18,
-			  'font_style_quote' => 'italic',
+			  'font_style_quote' => 'normal',
 			  'quote_alignment' => 'left',
 			  'font_size_author' => 18,
 			  'font_style_author' => 'normal',
