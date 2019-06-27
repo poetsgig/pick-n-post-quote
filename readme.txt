@@ -4,7 +4,7 @@ Donate link:
 Tags: widget, sidebar, quote
 Requires at least: 4.6.0
 Tested up to: 4.9.6
-Stable Tag: 1.0.1
+Stable Tag: 1.0.2
 License: GPLv2
 
 == Description ==
@@ -45,3 +45,6 @@ This plugin supports WordPress installation using version 4.6.0 and later.
 
 = 1.0.1 =
 * Plugin is first created
+
+= 1.0.2 =
+* Supports multiple instances of widget
