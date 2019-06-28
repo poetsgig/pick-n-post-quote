@@ -293,12 +293,8 @@ class pick_n_post_quote extends WP_Widget {
 				} ?>
 						
 		<?php echo $args['after_widget']; ?>
-														
-			  
-		<?php if ( $title ) { 
-			echo $before_title . $title . $after_title;
-		}				             
-	}
+																	             
+	<?php }
 
 } // End of class pick_n_post_quote
 
