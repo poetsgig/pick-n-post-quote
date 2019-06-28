@@ -5,7 +5,7 @@
     Description: This plugin shows a static or featured quote for current post in the sidebar. Utilizes WordPress custom field.
     Author: Amy Aulisi
 	Author URI: 
-    Version: 1.0.2
+    Version: 1.0.3
     License: GNU General Public License v2 or later
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	Text Domain: pick_n_post_quote
@@ -15,7 +15,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-define( 'PNPQ_VERSION', '1.0.2' );
+define( 'PNPQ_VERSION', '1.0.3' );
 
 // Register and load the widget
 function pick_n_post_quote_load_widget() {
@@ -47,6 +47,12 @@ class pick_n_post_quote extends WP_Widget {
 		}
 		else {
 		      $title = __( 'New title', 'pick_n_post_quote' );
+		}
+		if ( isset( $instance[ 'active_on_post' ] ) ) {
+		      $instance['active_on_post'] = $instance[ 'active_on_post' ];
+		}
+		if ( isset( $instance[ 'active_on_page' ] ) ) {
+		      $instance['active_on_page'] = $instance[ 'active_on_page' ];
 		}
 		if ( isset( $instance[ 'display_quote' ] ) ) {
 		      $instance['display_quote'] = $instance[ 'display_quote' ];
@@ -97,6 +103,12 @@ class pick_n_post_quote extends WP_Widget {
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'pick_n_post_quote' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
+			   <p>
+               <input class="checkbox" id="<?php echo $this->get_field_id('active_on_page'); ?>" type="checkbox" <?php checked( $instance[ 'active_on_page' ], 1 ); ?> name="<?php echo $this->get_field_name( 'active_on_page' ); ?>"   /> 
+    <label for="<?php echo $this->get_field_id( 'active_on_page' ); ?>"><?php esc_html_e( 'Activate also on static pages?', 'pick-n-post-quote' ); ?></label>
+               </p>
+			   
+			   <hr>
 		       <p>
                <input class="checkbox" id="<?php echo $this->get_field_id('display_quote'); ?>" type="checkbox" <?php checked( $instance[ 'display_quote' ], 1 ); ?> name="<?php echo $this->get_field_name( 'display_quote' ); ?>"   /> 
     <label for="<?php echo $this->get_field_id( 'display_quote' ); ?>"><?php esc_html_e( 'Display quote', 'pick-n-post-quote' ); ?></label>
@@ -188,6 +200,7 @@ class pick_n_post_quote extends WP_Widget {
 		
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
                 //Add isset to check if key is set
+				$instance['active_on_page'] 	= isset( $new_instance['active_on_page'] ) ? 1 : 0;
 				$instance['display_quote'] 		= isset( $new_instance['display_quote'] ) ? 1 : 0;
                 $instance['display_author']	 	= isset( $new_instance['display_author'] ) ? 1 : 0;
                 $instance['display_source'] 	= isset( $new_instance['display_source'] ) ? 1 : 0;
@@ -209,6 +222,7 @@ class pick_n_post_quote extends WP_Widget {
 	// Render an array of default values
 	private static function get_defaults() {
 		   $defaults = array(
+			  'active_on_page' => 0,
 			  'display_quote' => 1,
 			  'display_author' => 1,
 			  'display_source' => 0,
@@ -229,6 +243,7 @@ class pick_n_post_quote extends WP_Widget {
                 extract( $args );
 
 		$title = apply_filters( 'widget_title', $instance['title'] );
+		$active_on_page = isset( $instance[ 'active_on_page' ] ) ? 1 : 0;
 		$display_quote = isset( $instance[ 'display_quote' ] ) ? 1 : 0;
 		$display_author = isset( $instance[ 'display_author' ] ) ? 1 : 0;
         $display_source = isset( $instance[ 'display_source' ] ) ? 1 : 0;
@@ -243,21 +258,33 @@ class pick_n_post_quote extends WP_Widget {
 		$source_alignment = isset( $instance['source_alignment'] ) ? $instance['source_alignment'] : $defaults['source_alignment'];
 		$separator = apply_filters( 'widget_text', $instance['separator'] );
       
-	  
+	    // Check if needs active also on static pages. Otherwise by default show only on single posts.
+		if( 0 == $instance[ 'active_on_page' ] ) {          
+			$location = is_single();
+		} else if( 1 == $instance[ 'active_on_page' ] ) {
+			$location = is_singular();
+		} 
+		
+	    if ( $location ) {
+			
 			 // Before and after widget arguments are defined by themes
 			echo $args['before_widget'];
 			
-			if ( ! empty( $title ) )  {
-				echo $args['before_title'] . $title . $args['after_title'];
-			}
-		   // Run the code and display the output
+			// Run the code and display the output
 			global $post;
 
-				$pick_n_post_quote = get_post_meta($post->ID, 'pick_n_post_quote', true);
-				$pick_n_post_quote_author = get_post_meta($post->ID, 'pick_n_post_quote_author', true);
-				$pick_n_post_quote_source = get_post_meta($post->ID, 'pick_n_post_quote_source', true);
+			$pick_n_post_quote = get_post_meta($post->ID, 'pick_n_post_quote', true);
+			$pick_n_post_quote_author = get_post_meta($post->ID, 'pick_n_post_quote_author', true);
+			$pick_n_post_quote_source = get_post_meta($post->ID, 'pick_n_post_quote_source', true);
 
-				if ( !empty($pick_n_post_quote) ) { ?>			
+				// Show output only if quote exists
+				if ( !empty($pick_n_post_quote) ) { 
+				
+					// Widget title
+					if ( ! empty( $title ) )  {
+						echo $args['before_title'] . $title . $args['after_title'];
+					} ?>
+	
 					<div id="pick-n-post-container">	
 						<?php if( 1 == $instance[ 'display_quote' ] ) : 							
 						printf( '<div id="pick-n-post-quote" style="font-size: %1$spx; font-style: %2$s; text-align: %3$s;">',
@@ -288,13 +315,15 @@ class pick_n_post_quote extends WP_Widget {
 							</div>
 						<?php endif; ?>
 					</div>
-				<?php } else {
-					// Do nothing if there is no pick-n-post-quote
-				} ?>
+					
+			<?php } else {
+				// Do nothing if there is no pick-n-post-quote
+			} ?>
 						
 		<?php echo $args['after_widget']; ?>
-																	             
+																             
 	<?php }
+	}
 
 } // End of class pick_n_post_quote
 
@@ -306,6 +335,5 @@ function pick_n_post_quote_load_plugin_css() {
 	wp_enqueue_style( 'pnpq-style', plugin_dir_url( __FILE__ ) . 'css/style.css', array(), PNPQ_VERSION, 'all' );
 }
 add_action( 'wp_enqueue_scripts', 'pick_n_post_quote_load_plugin_css' );
-
 
 	
