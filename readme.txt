@@ -7,7 +7,7 @@ Donate link:
 Tags: widget, sidebar, custom field, meta, featured, quote
 Requires at least: 4.6.0
 Tested up to: 5.2.1
-Stable Tag: 1.0.3
+Stable Tag: 1.0.4
 License: GPLv2
 
 
@@ -23,6 +23,7 @@ Pick-n-Post Quote plugin allows you to display a static or featured quote for th
 * Font size
 * Font style
 * Text alignment
+* Text color
 * Optional display of quote author and source
 * Optional display on static pages
 
@@ -51,7 +52,7 @@ Scroll down until you see the "Custom Fields" meta box. Click "Enter New" to add
 
 When there is an entry for the custom field, you can verify if the meta data value exists in wp_postmeta table in the database. For the custom field meta key to appear in the dropdown under “Add New Custom Field”, there must be at least a single value entered. 
 	
-Pick another post. Since you already entered one entry for each custom field key, they will now appear in the Add New Custom Field "Select" dropdown. You just need to enter their texts on the "Value" area.
+Pick another post. Since you already entered one entry for each custom field key, they will now appear in the Add New Custom Field "Select" dropdown. You just need to enter their texts in the "Value" area.
 
 == Installation ==
 
@@ -92,6 +93,11 @@ This plugin supports WordPress installation using version 4.6.0 and later.
 If you wish to display random quote, a plugin "Quote Collection" by Srini G already exists for this purpose.
 
 == Changelog ==
+
+= 1.0.4 =
+* Add text color option.
+* Fix before widget.
+* Set quote disabled attribute.
 
 = 1.0.3 =
 * Add checkbox to disable display on static pages.
